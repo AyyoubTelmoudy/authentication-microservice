@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -19,4 +20,6 @@ public class Role {
     private String publicId;
     @Column(nullable = false,unique = true)
     private String role;
+    @ManyToMany(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)
+    private List<User> users;
 }

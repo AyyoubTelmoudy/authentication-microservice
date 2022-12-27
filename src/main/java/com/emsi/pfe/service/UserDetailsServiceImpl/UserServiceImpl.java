@@ -14,6 +14,7 @@ import com.emsi.pfe.repository.UserRepository;
 import com.emsi.pfe.request.UserRegisterRequest;
 import com.emsi.pfe.security.UserDetailsImpl;
 import com.emsi.pfe.service.UserService;
+import com.emsi.pfe.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,6 +41,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    Utils utils;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if(userRepository.findByEmail(email)!=null)
@@ -59,7 +62,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             User user=new User();
             user.setEmail(userRegisterRequest.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(userRegisterRequest.getPassword()));
-            user.setPublicId(userRegisterRequest.getPublicId());
+            user.setPublicId(utils.genereteRandomString(30));
             List<Role> roles=new ArrayList<Role>();
             roles.add(roleRepository.findByRole(SecurityConstants.DRIVER));
             user.setRoles(roles);
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             User user=new User();
             user.setEmail(userRegisterRequest.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(userRegisterRequest.getPassword()));
-            user.setPublicId(userRegisterRequest.getPublicId());
+            user.setPublicId(utils.genereteRandomString(30));
             List<Role> roles=new ArrayList<Role>();
             roles.add(roleRepository.findByRole(SecurityConstants.PASSENGER));
             user.setRoles(roles);

@@ -18,8 +18,4 @@ public class UserRegisterRequest {
     @NotNull(message ="Ce champ est obligatoire")
     @Size(min = 2)
     private String password;
-    @NotBlank(message ="L'id public ne doit pas être vide")
-    @NotNull(message ="Ce champ est obligatoire")
-    @Size(min = 2)
-    private String publicId;
 }

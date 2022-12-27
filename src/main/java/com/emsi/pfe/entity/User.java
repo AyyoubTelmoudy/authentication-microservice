@@ -19,9 +19,9 @@ public class User {
     @Column(nullable = false,unique = true)
     private String publicId;
     @Column(nullable = false,unique = true)
-    private String email ;
+    private String email;
     @Column(nullable = false)
     private String password;
-    @OneToMany(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)
     private List<Role> roles;
 }
