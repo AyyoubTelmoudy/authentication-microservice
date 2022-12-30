@@ -1,6 +1,5 @@
 package com.emsi.pfe.security;
 
-import com.emsi.pfe.constant.SecurityAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,7 +35,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 SecurityAPI.LOGIN,
                 SecurityAPI.TOKEN_REFRESH,
                 SecurityAPI.DRIVER_REGISTER,
-                SecurityAPI.PASSENGER_REGISTER
+                SecurityAPI.PASSENGER_REGISTER,
+                SecurityAPI.FORGET_PASSWORD,
+                SecurityAPI.RESET_FORGOTTEN_PASSWORD
                 ).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(authenticationFilter);

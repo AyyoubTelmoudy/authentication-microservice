@@ -4,15 +4,19 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.emsi.pfe.constant.SecurityConstants;
+import com.emsi.pfe.exception.*;
+import com.emsi.pfe.request.ForgetPasswordRequest;
+import com.emsi.pfe.request.ForgottenPasswordResetRequest;
+import com.emsi.pfe.security.SecurityConstants;
 import com.emsi.pfe.entity.Role;
 import com.emsi.pfe.entity.User;
-import com.emsi.pfe.exception.EmailDuplicationException;
-import com.emsi.pfe.exception.RefreshTokenMissingException;
 import com.emsi.pfe.repository.RoleRepository;
 import com.emsi.pfe.repository.UserRepository;
+import com.emsi.pfe.request.PasswordResetRequest;
 import com.emsi.pfe.request.UserRegisterRequest;
+import com.emsi.pfe.security.SecurityUtils;
 import com.emsi.pfe.security.UserDetailsImpl;
+import com.emsi.pfe.service.MailingService;
 import com.emsi.pfe.service.UserService;
 import com.emsi.pfe.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +47,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     RoleRepository roleRepository;
     @Autowired
     Utils utils;
+    @Autowired
+    SecurityUtils securityUtils;
+    @Autowired
+    MailingService mailingService;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if(userRepository.findByEmail(email)!=null)
@@ -124,6 +132,61 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public void passwordReset(PasswordResetRequest passwordResetRequest) throws IncorrectPassword {
+        String email=securityUtils.getCurrentUserEmail();
+        User user=userRepository.findByEmail(email);
+        boolean passwordIsCorrect=bCryptPasswordEncoder.matches(passwordResetRequest.getOldPassword(),user.getPassword());
+        if(passwordIsCorrect)
+        {
+            user.setPassword(bCryptPasswordEncoder.encode(passwordResetRequest.getNewPassword()));
+            userRepository.save(user);
+        }
+        else
+        {
+            throw new IncorrectPassword(SecurityConstants.PASSWORD_INCORRECT);
+        }
+    }
+
+    @Override
+    public void forgetPassword(ForgetPasswordRequest forgetPasswordRequest) throws EmailNotFoundException {
+       String email= forgetPasswordRequest.getEmail();
+        User user=userRepository.findByEmail(email);
+        if (user==null)
+        {
+            throw new EmailNotFoundException(SecurityConstants.EMAIL_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
+        else
+        {
+            String token= utils.genereteRandomString(8);
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+            mailingService.sendMail(email,SecurityConstants.RESET_PASSWORD_TOKEN,token);
+        }
+    }
+    @Override
+    public void forgottenPasswordReset(ForgottenPasswordResetRequest forgottenPasswordResetRequest) throws EmailNotFoundException, IncorrectResetPasswordTokenException {
+        String email= forgottenPasswordResetRequest.getEmail();
+        User user=userRepository.findByEmail(email);
+        if (user==null)
+        {
+            throw new EmailNotFoundException(SecurityConstants.EMAIL_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
+        else
+        {
+            if(user.getResetPasswordToken().equals(forgottenPasswordResetRequest.getResetPasswordToken()))
+            {
+                user.setPassword(bCryptPasswordEncoder.encode(forgottenPasswordResetRequest.getNewPassword()));
+                userRepository.save(user);
+            }
+             else
+            {
+                throw new IncorrectResetPasswordTokenException(SecurityConstants.INCORRECT_RESET_PASSWORD_TOKEN);
+            }
+        }
+
+    }
+
+    @Override
     public UserDetailsImpl loadUser(String email) {
         User user=userRepository.findByEmail(email);
         if(user!=null)
@@ -133,4 +196,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
     }
+
 }

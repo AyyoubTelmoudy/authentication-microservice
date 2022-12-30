@@ -2,3 +2,4 @@ eureka:
   client:
     serviceUrl:
       defaultZone: https://eureka-server-production.up.railway.app/eureka
+

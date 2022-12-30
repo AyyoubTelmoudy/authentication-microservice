@@ -1,6 +1,6 @@
 package com.emsi.pfe;
 
-import com.emsi.pfe.constant.SecurityConstants;
+import com.emsi.pfe.security.SecurityConstants;
 import com.emsi.pfe.entity.Role;
 import com.emsi.pfe.repository.RoleRepository;
 import com.emsi.pfe.util.Utils;

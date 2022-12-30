@@ -1,4 +1,4 @@
-package com.emsi.pfe.constant;
+package com.emsi.pfe.security;
 
 public class SecurityConstants {
     public static final String TOKEN_SECRET="inna_lilah_awdi_a_hmad";
@@ -18,4 +18,7 @@ public class SecurityConstants {
     public static final String EMAIL_NOT_FOUND_EXCEPTION_MESSAGE ="Email not found !";
     public static final String PASSWORD_INCORRECT = "Password is incorrect !";
 
+    public static final String APP_EMAIL ="kay.technologie.gdr@gmail.com" ;
+    public static final String RESET_PASSWORD_TOKEN ="Reset password token" ;
+    public static final String INCORRECT_RESET_PASSWORD_TOKEN ="Incorrect reset password token" ;
 }

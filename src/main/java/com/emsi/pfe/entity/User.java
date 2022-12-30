@@ -22,6 +22,8 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column
+    private String resetPasswordToken;
     @ManyToMany(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)
     private List<Role> roles;
 }

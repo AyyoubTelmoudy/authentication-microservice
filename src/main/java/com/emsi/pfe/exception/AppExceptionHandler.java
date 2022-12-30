@@ -1,6 +1,6 @@
 package com.emsi.pfe.exception;
 
-import com.emsi.pfe.constant.SecurityConstants;
+import com.emsi.pfe.security.SecurityConstants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +62,13 @@ public class AppExceptionHandler {
     public ResponseEntity<Object> HandleRefreshTokenMissingException(RefreshTokenMissingException ex,WebRequest request){
         Map<String,String> errors=new HashMap<>();
         errors.put(SecurityConstants.ERROR,SecurityConstants.REFRESH_TOKE_MISSING_ERROR_MESSAGE);
+        return new ResponseEntity<>(errors,new HttpHeaders(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value=IncorrectResetPasswordTokenException.class)
+    public ResponseEntity<Object> HandleIncorrectResetPasswordTokenException(IncorrectResetPasswordTokenException ex,WebRequest request){
+        Map<String,String> errors=new HashMap<>();
+        errors.put(SecurityConstants.ERROR,SecurityConstants.INCORRECT_RESET_PASSWORD_TOKEN);
         return new ResponseEntity<>(errors,new HttpHeaders(),HttpStatus.BAD_REQUEST);
     }
 

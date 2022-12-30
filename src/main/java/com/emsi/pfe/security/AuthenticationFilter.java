@@ -2,7 +2,6 @@ package com.emsi.pfe.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.emsi.pfe.constant.SecurityConstants;
 import com.emsi.pfe.request.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

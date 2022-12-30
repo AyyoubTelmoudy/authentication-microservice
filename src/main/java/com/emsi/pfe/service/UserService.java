@@ -1,7 +1,9 @@
 package com.emsi.pfe.service;
 
-import com.emsi.pfe.exception.EmailDuplicationException;
-import com.emsi.pfe.exception.RefreshTokenMissingException;
+import com.emsi.pfe.exception.*;
+import com.emsi.pfe.request.ForgetPasswordRequest;
+import com.emsi.pfe.request.ForgottenPasswordResetRequest;
+import com.emsi.pfe.request.PasswordResetRequest;
 import com.emsi.pfe.request.UserRegisterRequest;
 import com.emsi.pfe.security.UserDetailsImpl;
 
@@ -17,4 +19,9 @@ public interface UserService {
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, RefreshTokenMissingException;
 
     UserDetailsImpl loadUser(String email);
+    void passwordReset(PasswordResetRequest passwordResetRequest) throws IncorrectPassword;
+
+    void forgetPassword(ForgetPasswordRequest forgetPasswordRequest) throws EmailNotFoundException;
+
+    void forgottenPasswordReset(ForgottenPasswordResetRequest forgottenPasswordResetRequest) throws EmailNotFoundException, IncorrectResetPasswordTokenException;
 }
