@@ -59,6 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, String> tokens = new HashMap<>();
         tokens.put(SecurityConstants.ACCESS_TOKEN,access_token);
         tokens.put(SecurityConstants.REFRESH_TOKEN,refresh_token);
+        tokens.put("role",user.getRoles().get(0));
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(),tokens);
     }
@@ -77,3 +78,4 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         mapper.writeValue(out,errors);
     }
 }
+
